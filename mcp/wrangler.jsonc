@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "solana-multisig-ceremony-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "SOLANA_RPC_URL": "https://api.mainnet-beta.solana.com"
+  }
+  // Set HELIUS_API_KEY as a secret: npx wrangler secret put HELIUS_API_KEY
+}

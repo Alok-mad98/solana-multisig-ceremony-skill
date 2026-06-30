@@ -1,0 +1,4 @@
+# Local development secrets for the MCP server
+# Copy to .dev.vars
+SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+HELIUS_API_KEY=

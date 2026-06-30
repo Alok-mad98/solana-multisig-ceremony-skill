@@ -16,10 +16,16 @@
 ## Tooling
 - `@sqds/multisig` — TypeScript SDK for Squads v4
 - `@solana/web3.js` and `@solana/kit` — Solana clients
+- `agents` / `@cloudflare/agents` — Cloudflare Agents SDK for MCP deployment
 - `cargo-auditable` — embed dependency info in Rust binaries
 - `syft` — SBOM generation
 - `cosign` / Sigstore — artifact signing
 - `socket.dev` — JavaScript supply-chain risk scanning
+
+## MCP Deployment
+- [Build a Remote MCP server on Cloudflare](https://developers.cloudflare.com/agents/model-context-protocol/guides/remote-mcp-server/)
+- [Remote MCP transport docs](https://developers.cloudflare.com/agents/model-context-protocol/protocol/transport/)
+- This skill's MCP server: [`mcp/README.md`](../mcp/README.md)
 
 ## Related Bounty Submissions
 - `#70 squads-treasury-skill` — Squads operating & config audit (closest competitor)

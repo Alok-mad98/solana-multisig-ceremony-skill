@@ -46,6 +46,16 @@ All tools read credentials from `.env`:
 
 ---
 
+## MCP Server (Cloudflare Workers)
+
+You can also expose the skill's core tools as a **remote MCP server** on Cloudflare Workers, so any MCP-compatible agent (Claude, Cursor, Windsurf, your own agent) can call them without installing the skill locally.
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Alok-mad98/solana-multisig-ceremony-skill/tree/main/mcp)
+
+See [`mcp/README.md`](mcp/README.md) for deployment, secrets setup, and connection instructions.
+
+---
+
 ## Installation
 
 ### Standard install
@@ -120,16 +130,24 @@ solana-multisig-ceremony-skill/
 ├── rules/
 │   └── multisig-security.md
 │
-└── tools/
+├── tools/
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── audit-multisig.ts
+│   ├── decode-proposal.ts
+│   ├── check-durable-nonce.ts
+│   ├── audit-build-integrity.sh
+│   ├── ci-policy-template.yml
+│   ├── evidence-report.md.tpl
+│   └── README.md
+│
+└── mcp/                          # remote MCP server for Cloudflare Workers
     ├── package.json
+    ├── wrangler.jsonc
     ├── tsconfig.json
-    ├── audit-multisig.ts
-    ├── decode-proposal.ts
-    ├── check-durable-nonce.ts
-    ├── audit-build-integrity.sh
-    ├── ci-policy-template.yml
-    ├── evidence-report.md.tpl
-    └── README.md
+    ├── src/index.ts
+    ├── README.md
+    └── .dev.vars.example
 ```
 
 ---
