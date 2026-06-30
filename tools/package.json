@@ -1,0 +1,24 @@
+{
+  "name": "solana-multisig-ceremony-tools",
+  "version": "1.0.0",
+  "description": "Runnable tooling for the Solana Multisig Ceremony & Build Integrity skill",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "audit-multisig": "tsx audit-multisig.ts",
+    "decode-proposal": "tsx decode-proposal.ts",
+    "check-durable-nonce": "tsx check-durable-nonce.ts",
+    "build-integrity": "bash audit-build-integrity.sh"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.95.8",
+    "@sqds/multisig": "^2.1.4",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

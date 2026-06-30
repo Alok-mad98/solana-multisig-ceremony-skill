@@ -1,0 +1,68 @@
+# Copy this file into your project as .github/workflows/build-integrity.yml
+# and customize the build commands to match your program/client.
+
+name: Build Integrity Gate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  release:
+    types: [published]
+
+jobs:
+  dependency-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Deterministic install
+        run: npm ci
+      - name: npm audit
+        run: npm audit --audit-level=high
+
+  program-reproducible-build:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' || contains(github.event.head_commit.message, '[build-check]')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: metaplex-foundation/actions/install-solana@v1
+        with:
+          version: stable
+          cache: true
+      - name: Build program
+        run: anchor build
+      - name: Capture ELF hash
+        run: solana program dump -u m <PROGRAM_ID> /tmp/onchain.so && sha256sum target/deploy/*.so /tmp/onchain.so
+      # Fail CI if hashes do not match
+      - name: Compare build hash
+        run: |
+          LOCAL=$(sha256sum target/deploy/*.so | awk '{print $1}')
+          ONCHAIN=$(sha256sum /tmp/onchain.so | awk '{print $1}')
+          [ "$LOCAL" = "$ONCHAIN" ] || (echo "Reproducible build mismatch!" && exit 1)
+
+  sbom-and-provenance:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: "https://registry.npmjs.org"
+      - run: npm ci
+      - run: npm run build
+      - name: Generate SBOM
+        run: npm sbom --format cyclonedx --output sbom.cdx.json
+      - name: Publish with provenance
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
