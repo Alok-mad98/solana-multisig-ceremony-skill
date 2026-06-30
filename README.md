@@ -50,6 +50,25 @@ All tools read credentials from `.env`:
 
 You can also expose the skill's core tools as a **remote MCP server** on Cloudflare Workers, so any MCP-compatible agent (Claude, Cursor, Windsurf, your own agent) can call them without installing the skill locally.
 
+**Live MCP endpoint:**
+```
+https://solana-multisig-ceremony-mcp.arechampionw.workers.dev/mcp
+```
+
+**Connect from Claude Desktop:**
+```json
+{
+  "mcpServers": {
+    "solana-multisig-ceremony": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://solana-multisig-ceremony-mcp.arechampionw.workers.dev/mcp"]
+    }
+  }
+}
+```
+
+Expose the same tools yourself with one click:
+
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Alok-mad98/solana-multisig-ceremony-skill/tree/main/mcp)
 
 See [`mcp/README.md`](mcp/README.md) for deployment, secrets setup, and connection instructions.

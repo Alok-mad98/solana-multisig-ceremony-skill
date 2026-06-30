@@ -27,6 +27,12 @@ npm run deploy
 
 Your server will be live at `https://solana-multisig-ceremony-mcp.<account>.workers.dev/mcp`.
 
+The public instance is already running at:
+
+```
+https://solana-multisig-ceremony-mcp.arechampionw.workers.dev/mcp
+```
+
 ## Connect from Claude Desktop (or any local MCP client)
 
 Use `mcp-remote` to bridge remote HTTP to local stdio:
@@ -36,7 +42,7 @@ Use `mcp-remote` to bridge remote HTTP to local stdio:
   "mcpServers": {
     "solana-multisig-ceremony": {
       "command": "npx",
-      "args": ["mcp-remote", "https://solana-multisig-ceremony-mcp.<account>.workers.dev/mcp"]
+      "args": ["mcp-remote", "https://solana-multisig-ceremony-mcp.arechampionw.workers.dev/mcp"]
     }
   }
 }
