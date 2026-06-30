@@ -105,8 +105,69 @@ function createServer(env: Env) {
   return server;
 }
 
+function landingPage(): string {
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Solana Multisig Ceremony MCP</title>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 720px; margin: 48px auto; padding: 0 24px; line-height: 1.6; color: #111; }
+    code { background: #f4f4f5; padding: 2px 6px; border-radius: 4px; font-size: 0.95em; }
+    pre { background: #18181b; color: #fafafa; padding: 16px; border-radius: 8px; overflow-x: auto; }
+    .ok { color: #16a34a; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <h1>Solana Multisig Ceremony & Build Integrity MCP</h1>
+  <p class="ok">Server is live</p>
+  <p>This is a remote MCP (Model Context Protocol) server. It is meant to be connected from an MCP-compatible agent such as Claude Desktop, Cursor, Windsurf, or Codex.</p>
+  <p><strong>MCP endpoint:</strong> <code>https://solana-multisig-ceremony-mcp.arechampionw.workers.dev/mcp</code></p>
+  <h3>Connect from Claude Desktop</h3>
+  <pre>{
+  "mcpServers": {
+    "solana-multisig-ceremony": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://solana-multisig-ceremony-mcp.arechampionw.workers.dev/mcp"]
+    }
+  }
+}</pre>
+  <p>Open source repo: <a href="https://github.com/Alok-mad98/solana-multisig-ceremony-skill">https://github.com/Alok-mad98/solana-multisig-ceremony-skill</a></p>
+</body>
+</html>`;
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
+    const url = new URL(request.url);
+
+    // Friendly landing page for humans who open the root URL in a browser
+    if (url.pathname === "/" && request.method === "GET") {
+      return new Response(landingPage(), {
+        headers: { "Content-Type": "text/html; charset=utf-8" },
+      });
+    }
+
+    // Browser-friendly status JSON for the MCP path when opened without an MCP Accept header
+    if (url.pathname === "/mcp" && request.method === "GET") {
+      const accept = request.headers.get("Accept") || "";
+      if (!accept.includes("text/event-stream") && !accept.includes("application/json")) {
+        return new Response(
+          JSON.stringify(
+            {
+              status: "MCP server is live",
+              endpoint: "/mcp",
+              note: "Use this URL with an MCP client (Claude Desktop, Cursor, Windsurf, Codex, etc.). Browser GET is for status only.",
+              repo: "https://github.com/Alok-mad98/solana-multisig-ceremony-skill",
+            },
+            null,
+            2
+          ),
+          { headers: { "Content-Type": "application/json" } }
+        );
+      }
+    }
+
     const server = createServer(env);
     return createMcpHandler(server)(request, env, ctx);
   },
